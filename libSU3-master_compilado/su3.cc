@@ -67,7 +67,7 @@ void print_cgcs(cgarray* cg, long n, long p, long q,
     {
         (*cg)(n-1, k, l, m, k1, l1, m1, k2, l2, m2).tostring(val_buf, BUF_SIZE);
         printf("%ld%ld%ld,%ld%ld%ld,%ld%ld%ld,%s,%ld%ld,%ld\n",
-            k, l, m, k1, l1, m1, k2, l2, m2, val_buf, p, q, d);
+            k, l, m, k1, l1, m1, k2, l2, m2, val_buf, p, q, n);
     }
     printf("\n");
 }
