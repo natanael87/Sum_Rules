@@ -137,13 +137,15 @@ e2klm = dcf.transform_m(mB,e)
 
 Gm = Matrix([])
 count = 0
+steps = []
+tags = []
+fcoef = []
 for i in range(len(e0klm)):
     dfLS=df.loc[(df['is_symm']=='S')]
     dfLS=dfLS.loc[(df['p']==e[0])&(df['q']==e[1])]
     dfLS=dfLS.loc[(df['k']==e0klm[i,0])&(df['l']==e0klm[i,1])&(df['m']==e0klm[i,2])]
     #print(e[0],"-----",e[1])
-   
-    #print(dfLS.shape[0])
+    steps.append(dfLS.shape[0])
     for j in range(dfLS.shape[0]):
         D=list(dfLS.iloc[j,0:3].values)
         B1=list(dfLS.iloc[j,3:6].values)
@@ -151,6 +153,8 @@ for i in range(len(e0klm)):
         cgci = dcf.cgc_md(B1,B2,D,dfLS,df)
         tag = [D, B1, B2]
         Gi = 'G'+str(count)
+        tags.append(Gi)
+        fcoef.append(cgci)
         count = count + 1
         Gm = Gm.row_insert(count, Matrix([[cgci,tag, Gi]]))
         
@@ -168,7 +172,7 @@ dfFA=dfFinal.loc[(dfFinal['is_symm']=='A')]
 dictConversion = dcf.getDictConversion(mB,multiplets,e0klm)
 
 
-matrizFinal = dcf.get_cgDecays(mB,multiplets,e0klm,df,dfIS,dfFS)
+matrizFinal = dcf.get_cgDecays(mB,multiplets,e0klm,df,dfIS,dfFS,fcoef,tags,steps)
 
 
     

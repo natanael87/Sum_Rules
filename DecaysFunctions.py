@@ -213,7 +213,7 @@ def getDictConversion(mB,multiplets,e0klm):
 
 
 
-def get_cgDecays(mB,multiplets,e0klm,df,dfI_info,dfF_info):
+def get_cgDecays(mB,multiplets,e0klm,df,dfI_info,dfF_info,fcoef,tags,steps):
     cgIni = 0
     sizeI = len(dfI_info)
     sizeF = len(dfF_info)
@@ -223,11 +223,12 @@ def get_cgDecays(mB,multiplets,e0klm,df,dfI_info,dfF_info):
     qF = list (dfF_info.iloc[range(0,sizeF),1])
     #diccionario de klm dado un mB.
     count = 0
-    matrizFinal = Matrix([])
+    matrizFinal = []
+    acumStep = 0
     dictConversion = getDictConversion(mB,multiplets,e0klm)
     for i in range(0,len(e0klm)):
-        print("count",count)
-        colum = []
+        #print("count",count)
+        colum = []	
         for j in range(sizeI):
             #print("pI[j]: ",pI[j],"qI[j]: ",qI[j])
             klm = list(dictConversion[tuple(e0klm[i])][tuple([pI[j],qI[j]])])
@@ -246,30 +247,47 @@ def get_cgDecays(mB,multiplets,e0klm,df,dfI_info,dfF_info):
             else:
                 cgIni = parse_expr(df11['cg_coef'].values[0],evaluate=0) 
             
-            print("cgIni = ",cgIni)
+            #print("cgIni = ",cgIni)
                 
             #Inicia ciclo para decaimiento final:
             klm2 = list(dictConversion[tuple(e0klm[i])][tuple([pF[j],qF[j]])])
             #print(klm2)
-            print("p: ",pF[j],"------"," q: ",qF[j])
+            #print("p: ",pF[j],"------"," q: ",qF[j])
             df22=df.loc[(df['k']==klm2[0])&(df['l']==klm2[1])&(df['m']==klm2[2])]
             df22=df22.loc[(df['p']==pF[j])&(df['q']==qF[j])]
             df22=df22.loc[df['degeneracy']==dfF_info.iloc[j,2]]
             #print("i = ",i," j = ", j, " sizeI ", sizeI)
             #print(df22)
+           # print(steps[i],"-------------->>-------------",df22.shape)
             if(df22.empty or df11.empty ):
-                colum.append(-1)
+                for l in range(steps[i]):
+                    colum.append(0)
                 print("Vacio!")
             else:
                 for k in range(df22['cg_coef'].shape[0]):
                     colum.append(Mul(parse_expr(df22.cg_coef.iloc[k]),cgIni))
-                    print("df22.cg_coef.iloc[",k,"]- = ",Mul(parse_expr(df22.cg_coef.iloc[k]),cgIni))
-            print("-------------------------------------------------------")
-                    
+            #        print("df22.cg_coef.iloc[",k,"]- = ",Mul(parse_expr(df22.cg_coef.iloc[k]),cgIni))
+            #print("-------------------------------------------------------")
         #print(Matrix(colum))
-        matrizFinal= matrizFinal.row_insert(count,Matrix(colum))
+        Mrow = formatMatriz(colum,steps[i],tags,fcoef,acumStep)
+       # print(shape(Mrow)
+        acumStep = acumStep + steps[i]
+        matrizFinal.append(Mrow)
         count +=1
+        
     return matrizFinal
 
 
+def formatMatriz(column,step,tags,fcoef,acumStep):
+    col0=col1=col2=col3=col4=col5=[]
+    M = Matrix([]) 
+    print("tamañoooo",len(fcoef))
+    col0 = fcoef[acumStep:acumStep+step]
+    col1 = column[0:step]
+    col2 = column[step:step*2]
+    col3 = column[step*2:step*3]
+    col4 = column[step*3:step*4]
+    col5 = tags[acumStep:acumStep+step]
+    M = M.row_insert(0,Matrix([col0,col1,col2,col3,col4,col5]).T)                        
+    return M
 
