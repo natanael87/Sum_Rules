@@ -174,6 +174,8 @@ dictConversion = dcf.getDictConversion(mB,multiplets,e0klm)
 
 matrizFinal = dcf.get_cgDecays(mB,multiplets,e0klm,df,dfIS,dfFS,fcoef,tags,steps)
 
+print(matrizFinal)
+
 
     
 

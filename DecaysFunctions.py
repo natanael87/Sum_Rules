@@ -262,7 +262,6 @@ def get_cgDecays(mB,multiplets,e0klm,df,dfI_info,dfF_info,fcoef,tags,steps):
             if(df22.empty or df11.empty ):
                 for l in range(steps[i]):
                     colum.append(0)
-                print("Vacio!")
             else:
                 for k in range(df22['cg_coef'].shape[0]):
                     colum.append(Mul(parse_expr(df22.cg_coef.iloc[k]),cgIni))
@@ -281,7 +280,6 @@ def get_cgDecays(mB,multiplets,e0klm,df,dfI_info,dfF_info,fcoef,tags,steps):
 def formatMatriz(column,step,tags,fcoef,acumStep):
     col0=col1=col2=col3=col4=col5=[]
     M = Matrix([]) 
-    print("tamañoooo",len(fcoef))
     col0 = fcoef[acumStep:acumStep+step]
     col1 = column[0:step]
     col2 = column[step:step*2]
