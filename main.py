@@ -138,6 +138,7 @@ e2klm = dcf.transform_m(mB,e)
 Gm = Matrix([])
 count = 0
 steps = []
+tagst = []
 tags = []
 fcoef = []
 for i in range(len(e0klm)):
@@ -152,6 +153,7 @@ for i in range(len(e0klm)):
         B2=list(dfLS.iloc[j,6:9].values)
         cgci = dcf.cgc_md(B1,B2,D,dfLS,df)
         tag = [D, B1, B2]
+        tagst.append([D, B1, B2])
         Gi = 'G'+str(count)
         tags.append(Gi)
         fcoef.append(cgci)
@@ -172,7 +174,7 @@ dfFA=dfFinal.loc[(dfFinal['is_symm']=='A')]
 dictConversion = dcf.getDictConversion(mB,multiplets,e0klm)
 
 
-matrizFinal = dcf.get_cgDecays(mB,multiplets,e0klm,df,dfIS,dfFS,fcoef,tags,steps)
+matrizFinal = dcf.get_cgDecays(mB,multiplets,e0klm,df,dfIS,dfFS,fcoef,tags,tagst,steps)
 
 print(matrizFinal)
 

@@ -213,7 +213,7 @@ def getDictConversion(mB,multiplets,e0klm):
 
 
 
-def get_cgDecays(mB,multiplets,e0klm,df,dfI_info,dfF_info,fcoef,tags,steps):
+def get_cgDecays(mB,multiplets,e0klm,df,dfI_info,dfF_info,fcoef,tags,tagst,steps):
     cgIni = 0
     sizeI = len(dfI_info)
     sizeF = len(dfF_info)
@@ -257,7 +257,7 @@ def get_cgDecays(mB,multiplets,e0klm,df,dfI_info,dfF_info,fcoef,tags,steps):
             df22=df22.loc[(df['p']==pF[j])&(df['q']==qF[j])]
             df22=df22.loc[df['degeneracy']==dfF_info.iloc[j,2]]
             #print("i = ",i," j = ", j, " sizeI ", sizeI)
-            #print(df22)
+            print(df22[['k','l','m', 'k1', 'l1', 'm1', 'k2', 'l2', 'm2', 'cg_coef', 'p', 'q']])
            # print(steps[i],"-------------->>-------------",df22.shape)
             if(df22.empty or df11.empty ):
                 for l in range(steps[i]):
@@ -268,7 +268,7 @@ def get_cgDecays(mB,multiplets,e0klm,df,dfI_info,dfF_info,fcoef,tags,steps):
             #        print("df22.cg_coef.iloc[",k,"]- = ",Mul(parse_expr(df22.cg_coef.iloc[k]),cgIni))
             #print("-------------------------------------------------------")
         #print(Matrix(colum))
-        Mrow = formatMatriz(colum,steps[i],tags,fcoef,acumStep)
+        Mrow = formatMatriz(colum,steps[i],tags,tagst,fcoef,acumStep)
        # print(shape(Mrow)
         acumStep = acumStep + steps[i]
         matrizFinal.append(Mrow)
@@ -277,8 +277,8 @@ def get_cgDecays(mB,multiplets,e0klm,df,dfI_info,dfF_info,fcoef,tags,steps):
     return matrizFinal
 
 
-def formatMatriz(column,step,tags,fcoef,acumStep):
-    col0=col1=col2=col3=col4=col5=[]
+def formatMatriz(column,step,tags,tagst,fcoef,acumStep):
+    col0=col1=col2=col3=col4=col5=col6=[]
     M = Matrix([]) 
     col0 = fcoef[acumStep:acumStep+step]
     col1 = column[0:step]
@@ -286,6 +286,7 @@ def formatMatriz(column,step,tags,fcoef,acumStep):
     col3 = column[step*2:step*3]
     col4 = column[step*3:step*4]
     col5 = tags[acumStep:acumStep+step]
-    M = M.row_insert(0,Matrix([col0,col1,col2,col3,col4,col5]).T)                        
+    col6 = tagst[acumStep:acumStep+step]
+    M = M.row_insert(0,Matrix([col0,col1,col2,col3,col4,col5,col6]).T)                        
     return M
 
