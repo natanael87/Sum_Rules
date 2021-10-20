@@ -212,7 +212,7 @@ def getDictConversion(mB,multiplets,e0klm):
     return dictConversion
 
 
-
+# Crea una matriz con los coeficientes de constantes de decaimientos
 def get_cgDecays(mB,multiplets,e0klm,df,dfI_info,dfF_info,fcoef,tags,tagst,steps):
     cgIni = 0
     sizeI = len(dfI_info)
